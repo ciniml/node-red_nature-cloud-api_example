@@ -1,0 +1,31 @@
+[
+    {
+        "id": "6e53ef31091cb8dd",
+        "type": "switch",
+        "z": "6ff513f55be3777a",
+        "name": "要操作判定",
+        "property": "needAcUpdate",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            },
+            {
+                "t": "false"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 2,
+        "x": 350,
+        "y": 840,
+        "wires": [
+            [
+                "3328c20c569f38bb"
+            ],
+            [
+                "70d43f9a103bb508"
+            ]
+        ]
+    }
+]

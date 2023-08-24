@@ -1,0 +1,166 @@
+[
+    {
+        "id": "992bfe9f5a3340b8",
+        "type": "tab",
+        "label": "manage_access_token",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "332b64ad7d65c43b",
+        "type": "http request",
+        "z": "992bfe9f5a3340b8",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.nature.global/1/appliances",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Authorization",
+                "keyValue": "",
+                "valueType": "msg",
+                "valueValue": "accessToken"
+            }
+        ],
+        "x": 470,
+        "y": 40,
+        "wires": [
+            [
+                "9aa421234e0fcda3"
+            ]
+        ]
+    },
+    {
+        "id": "d7871f90c9fdccb4",
+        "type": "inject",
+        "z": "992bfe9f5a3340b8",
+        "name": "appliances",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "3a41e024f4ee547a"
+            ]
+        ]
+    },
+    {
+        "id": "9aa421234e0fcda3",
+        "type": "debug",
+        "z": "992bfe9f5a3340b8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "c82ca479d33a7380",
+        "type": "credentials",
+        "z": "992bfe9f5a3340b8",
+        "name": "access token",
+        "props": [
+            {
+                "value": "accessToken",
+                "type": "msg"
+            }
+        ],
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "e7b9196c93d2a339"
+            ]
+        ]
+    },
+    {
+        "id": "e7b9196c93d2a339",
+        "type": "change",
+        "z": "992bfe9f5a3340b8",
+        "name": "prepend Bearer",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accessToken",
+                "pt": "flow",
+                "to": "\"Bearer \" & accessToken",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "11d333ce40ea8da8",
+        "type": "inject",
+        "z": "992bfe9f5a3340b8",
+        "name": "load Access Token",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "c82ca479d33a7380"
+            ]
+        ]
+    },
+    {
+        "id": "3a41e024f4ee547a",
+        "type": "change",
+        "z": "992bfe9f5a3340b8",
+        "name": "inject accessToken",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accessToken",
+                "pt": "msg",
+                "to": "accessToken",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 290,
+        "y": 40,
+        "wires": [
+            [
+                "332b64ad7d65c43b"
+            ]
+        ]
+    }
+]

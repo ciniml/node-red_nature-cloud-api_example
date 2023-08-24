@@ -1,0 +1,69 @@
+[
+    {
+        "id": "eed332ece1e14ce7",
+        "type": "tab",
+        "label": "basic_access_to_nature_cloud_api",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "b2d8a054506250c5",
+        "type": "http request",
+        "z": "eed332ece1e14ce7",
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.nature.global/1/appliances",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "bearer",
+        "senderr": false,
+        "headers": [],
+        "x": 270,
+        "y": 40,
+        "wires": [
+            [
+                "c231ddcdeb4f1941"
+            ]
+        ]
+    },
+    {
+        "id": "4f41ed1836348fa1",
+        "type": "inject",
+        "z": "eed332ece1e14ce7",
+        "name": "appliances",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "b2d8a054506250c5"
+            ]
+        ]
+    },
+    {
+        "id": "c231ddcdeb4f1941",
+        "type": "debug",
+        "z": "eed332ece1e14ce7",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 40,
+        "wires": []
+    }
+]

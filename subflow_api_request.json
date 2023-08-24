@@ -1,0 +1,558 @@
+[
+    {
+        "id": "1004aad07d3f3d66",
+        "type": "subflow",
+        "name": "Remo API Request",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 20,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "9beda1f030452c96"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 520,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "370d4cd565461064",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 700,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "b591a68066bd501d",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "370d4cd565461064",
+        "type": "http request",
+        "z": "1004aad07d3f3d66",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "b591a68066bd501d"
+            ]
+        ]
+    },
+    {
+        "id": "9beda1f030452c96",
+        "type": "change",
+        "z": "1004aad07d3f3d66",
+        "name": "inject headers",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{\t    \"Authorization\": ($flowContext(\"$parent.accessToken\")),\t    \"Content-Type\": (method = 'POST' ? 'application/x-www-form-urlencoded' : 'application/json')\t}\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 180,
+        "y": 80,
+        "wires": [
+            [
+                "370d4cd565461064"
+            ]
+        ]
+    },
+    {
+        "id": "b591a68066bd501d",
+        "type": "change",
+        "z": "1004aad07d3f3d66",
+        "name": "extract status",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "statusCode & \" \" & headers.`x-rate-limit-remaining` & \"/\" & headers.`x-rate-limit-limit`",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ce875e40448377d8",
+        "type": "tab",
+        "label": "subflow_api_request",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2034bf8e8f11d1de",
+        "type": "inject",
+        "z": "ce875e40448377d8",
+        "name": "appliances",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "url",
+                "v": "https://api.nature.global/1/appliances",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "89769e1d38fc69a9"
+            ]
+        ]
+    },
+    {
+        "id": "22cf1614a61a5df5",
+        "type": "debug",
+        "z": "ce875e40448377d8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "4d26d46a12e796b2",
+        "type": "credentials",
+        "z": "ce875e40448377d8",
+        "name": "access token",
+        "props": [
+            {
+                "value": "accessToken",
+                "type": "msg"
+            }
+        ],
+        "x": 310,
+        "y": 260,
+        "wires": [
+            [
+                "7e1fd61bdbbfe410"
+            ]
+        ]
+    },
+    {
+        "id": "7e1fd61bdbbfe410",
+        "type": "change",
+        "z": "ce875e40448377d8",
+        "name": "prepend Bearer",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accessToken",
+                "pt": "flow",
+                "to": "\"Bearer \" & accessToken",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "258996b54cfb89ac",
+        "type": "inject",
+        "z": "ce875e40448377d8",
+        "name": "load Access Token",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 260,
+        "wires": [
+            [
+                "4d26d46a12e796b2"
+            ]
+        ]
+    },
+    {
+        "id": "89769e1d38fc69a9",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "ce875e40448377d8",
+        "name": "",
+        "x": 290,
+        "y": 40,
+        "wires": [
+            [
+                "22cf1614a61a5df5"
+            ]
+        ]
+    },
+    {
+        "id": "792dd6ba0fb1800a",
+        "type": "inject",
+        "z": "ce875e40448377d8",
+        "name": "devices",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "url",
+                "v": "https://api.nature.global/1/devices",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 100,
+        "wires": [
+            [
+                "bb36194a55d1f136"
+            ]
+        ]
+    },
+    {
+        "id": "bb36194a55d1f136",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "ce875e40448377d8",
+        "name": "",
+        "x": 290,
+        "y": 100,
+        "wires": [
+            [
+                "a75da3227c7c4c39",
+                "6dbf384d44e887b8"
+            ]
+        ]
+    },
+    {
+        "id": "a75da3227c7c4c39",
+        "type": "debug",
+        "z": "ce875e40448377d8",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "67cac416ddb986d7",
+        "type": "debug",
+        "z": "ce875e40448377d8",
+        "name": "デバイスID",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6dbf384d44e887b8",
+        "type": "change",
+        "z": "ce875e40448377d8",
+        "name": "デバイス抽出",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[\t    name=\"わんこなの！\" \t    and \t    users[\t        nickname=\"Kenta Ida\" \t        and \t        superuser=true\t    ]\t].id",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 140,
+        "wires": [
+            [
+                "67cac416ddb986d7",
+                "817f2caf5bf88be5"
+            ]
+        ]
+    },
+    {
+        "id": "817f2caf5bf88be5",
+        "type": "change",
+        "z": "ce875e40448377d8",
+        "name": "devices/appliances URL構築",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "\"https://api.nature.global/1/devices/\" & payload & \"/appliances\"",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "method",
+                "pt": "msg",
+                "to": "GET",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 200,
+        "wires": [
+            [
+                "f0fe0c07032e1844"
+            ]
+        ]
+    },
+    {
+        "id": "f0fe0c07032e1844",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "ce875e40448377d8",
+        "name": "",
+        "x": 990,
+        "y": 200,
+        "wires": [
+            [
+                "12cb7b6bcb6724fe",
+                "ca5462575856d209"
+            ]
+        ]
+    },
+    {
+        "id": "12cb7b6bcb6724fe",
+        "type": "debug",
+        "z": "ce875e40448377d8",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ca5462575856d209",
+        "type": "change",
+        "z": "ce875e40448377d8",
+        "name": "照明家電ID抽出",
+        "rules": [
+            {
+                "t": "set",
+                "p": "lightApplianceId",
+                "pt": "flow",
+                "to": "payload[\t    nickname=\"照明\" \t].id",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1200,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fc43657b6e367aff",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "ce875e40448377d8",
+        "name": "",
+        "x": 470,
+        "y": 360,
+        "wires": [
+            [
+                "3eb0573e01c2ae4a"
+            ]
+        ]
+    },
+    {
+        "id": "3eb0573e01c2ae4a",
+        "type": "debug",
+        "z": "ce875e40448377d8",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "ee0d4544986f0f99",
+        "type": "inject",
+        "z": "ce875e40448377d8",
+        "name": "照明OFF",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"button\": \"off\"}",
+        "payloadType": "json",
+        "x": 100,
+        "y": 360,
+        "wires": [
+            [
+                "6730b9c6e0bbbd14"
+            ]
+        ]
+    },
+    {
+        "id": "6730b9c6e0bbbd14",
+        "type": "change",
+        "z": "ce875e40448377d8",
+        "name": "照明URL構築",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "\"https://api.nature.global/1/appliances/\" & $flowContext(\"lightApplianceId\") & \"/light\"",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "method",
+                "pt": "msg",
+                "to": "POST",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 360,
+        "wires": [
+            [
+                "fc43657b6e367aff"
+            ]
+        ]
+    },
+    {
+        "id": "cdf885b9f9227037",
+        "type": "inject",
+        "z": "ce875e40448377d8",
+        "name": "照明ON",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"button\": \"on\"}",
+        "payloadType": "json",
+        "x": 90,
+        "y": 420,
+        "wires": [
+            [
+                "6730b9c6e0bbbd14"
+            ]
+        ]
+    }
+]
