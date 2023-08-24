@@ -1,5 +1,1068 @@
 [
     {
+        "id": "1004aad07d3f3d66",
+        "type": "subflow",
+        "name": "Remo API Request",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 20,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "9beda1f030452c96"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 520,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "370d4cd565461064",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99",
+        "status": {
+            "x": 700,
+            "y": 140,
+            "wires": [
+                {
+                    "id": "b591a68066bd501d",
+                    "port": 0
+                }
+            ]
+        }
+    },
+    {
+        "id": "370d4cd565461064",
+        "type": "http request",
+        "z": "1004aad07d3f3d66",
+        "name": "",
+        "method": "use",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "b591a68066bd501d"
+            ]
+        ]
+    },
+    {
+        "id": "9beda1f030452c96",
+        "type": "change",
+        "z": "1004aad07d3f3d66",
+        "name": "inject headers",
+        "rules": [
+            {
+                "t": "set",
+                "p": "headers",
+                "pt": "msg",
+                "to": "{\t    \"Authorization\": ($flowContext(\"$parent.accessToken\")),\t    \"Content-Type\": (method = 'POST' ? 'application/x-www-form-urlencoded' : 'application/json')\t}\t",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 180,
+        "y": 80,
+        "wires": [
+            [
+                "370d4cd565461064"
+            ]
+        ]
+    },
+    {
+        "id": "b591a68066bd501d",
+        "type": "change",
+        "z": "1004aad07d3f3d66",
+        "name": "extract status",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "statusCode & \" \" & headers.`x-rate-limit-remaining` & \"/\" & headers.`x-rate-limit-limit`",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6ff513f55be3777a",
+        "type": "tab",
+        "label": "control_ac",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "55037c7fa3e2cf0f",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "appliances",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "url",
+                "v": "https://api.nature.global/1/appliances",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "ed714a497e3057a6"
+            ]
+        ]
+    },
+    {
+        "id": "dde95b91cb357c82",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "ce1720b7b96207b3",
+        "type": "credentials",
+        "z": "6ff513f55be3777a",
+        "name": "access token",
+        "props": [
+            {
+                "value": "accessToken",
+                "type": "msg"
+            }
+        ],
+        "x": 310,
+        "y": 360,
+        "wires": [
+            [
+                "c94d82a012d3e5a7"
+            ]
+        ]
+    },
+    {
+        "id": "c94d82a012d3e5a7",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "prepend Bearer",
+        "rules": [
+            {
+                "t": "set",
+                "p": "accessToken",
+                "pt": "flow",
+                "to": "\"Bearer \" & accessToken",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "89adaacb5bd6d4ca",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "load Access Token",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "ce1720b7b96207b3"
+            ]
+        ]
+    },
+    {
+        "id": "ed714a497e3057a6",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "6ff513f55be3777a",
+        "name": "",
+        "x": 290,
+        "y": 40,
+        "wires": [
+            [
+                "dde95b91cb357c82"
+            ]
+        ]
+    },
+    {
+        "id": "4af378c5481f7413",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "devices",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "url",
+                "v": "https://api.nature.global/1/devices",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 90,
+        "y": 100,
+        "wires": [
+            [
+                "bbc12cf169658879"
+            ]
+        ]
+    },
+    {
+        "id": "bbc12cf169658879",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "6ff513f55be3777a",
+        "name": "",
+        "x": 290,
+        "y": 100,
+        "wires": [
+            [
+                "545fff32b395f6ac",
+                "fcc6c38e611e2dc0"
+            ]
+        ]
+    },
+    {
+        "id": "545fff32b395f6ac",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "cb8cbd8d30c735f9",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "デバイスID",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 690,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "fcc6c38e611e2dc0",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "デバイス抽出",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[\t    name=\"わんこなの！\" \t    and \t    users[\t        nickname=\"Kenta Ida\" \t        and \t        superuser=true\t    ]\t].id",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 140,
+        "wires": [
+            [
+                "cb8cbd8d30c735f9",
+                "678cdf9e69cd5190"
+            ]
+        ]
+    },
+    {
+        "id": "678cdf9e69cd5190",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "devices/appliances URL構築",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "\"https://api.nature.global/1/devices/\" & payload & \"/appliances\"",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "method",
+                "pt": "msg",
+                "to": "GET",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 200,
+        "wires": [
+            [
+                "cfc592e6a371fcfe"
+            ]
+        ]
+    },
+    {
+        "id": "cfc592e6a371fcfe",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "6ff513f55be3777a",
+        "name": "",
+        "x": 990,
+        "y": 200,
+        "wires": [
+            [
+                "c641836002427c99",
+                "5587abcbd4abd133",
+                "e402a76e8bafc06a"
+            ]
+        ]
+    },
+    {
+        "id": "c641836002427c99",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1180,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "5587abcbd4abd133",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "照明家電ID抽出",
+        "rules": [
+            {
+                "t": "set",
+                "p": "lightApplianceId",
+                "pt": "flow",
+                "to": "payload[\t    nickname=\"照明\" \t].id",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1200,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2a7f1caa373294a1",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "6ff513f55be3777a",
+        "name": "",
+        "x": 470,
+        "y": 460,
+        "wires": [
+            [
+                "625b6a92b0412dc2"
+            ]
+        ]
+    },
+    {
+        "id": "625b6a92b0412dc2",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "44bd798d956b2333",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "照明OFF",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"button\": \"off\"}",
+        "payloadType": "json",
+        "x": 100,
+        "y": 460,
+        "wires": [
+            [
+                "c9e3c875c463168f"
+            ]
+        ]
+    },
+    {
+        "id": "c9e3c875c463168f",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "d": true,
+        "name": "照明URL構築",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "\"https://api.nature.global/1/appliances/\" & $flowContext(\"lightApplianceId\") & \"/light\"",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "method",
+                "pt": "msg",
+                "to": "POST",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 280,
+        "y": 460,
+        "wires": [
+            [
+                "2a7f1caa373294a1"
+            ]
+        ]
+    },
+    {
+        "id": "662be7462a1d65cf",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "照明ON",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"button\": \"on\"}",
+        "payloadType": "json",
+        "x": 90,
+        "y": 520,
+        "wires": [
+            [
+                "c9e3c875c463168f"
+            ]
+        ]
+    },
+    {
+        "id": "7235c3101b80631a",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "センサー更新",
+        "props": [
+            {
+                "p": "method",
+                "v": "GET",
+                "vt": "str"
+            },
+            {
+                "p": "url",
+                "v": "https://api.nature.global/1/devices",
+                "vt": "str"
+            }
+        ],
+        "repeat": "120",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 120,
+        "y": 600,
+        "wires": [
+            [
+                "920fe48cec91953b"
+            ]
+        ]
+    },
+    {
+        "id": "920fe48cec91953b",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "6ff513f55be3777a",
+        "name": "",
+        "x": 330,
+        "y": 600,
+        "wires": [
+            [
+                "96beee4ff4ebe6ea"
+            ]
+        ]
+    },
+    {
+        "id": "96beee4ff4ebe6ea",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "センサーデータ抽出",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload[\t    name=\"自宅Remo3\" \t    and \t    users[\t        nickname=\"Kenta Ida\" \t        and \t        superuser=true\t    ]\t].newest_events",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 600,
+        "wires": [
+            [
+                "ab93d403de5cffc6",
+                "d38ce0e11aa89842",
+                "72762da1404ce252"
+            ]
+        ]
+    },
+    {
+        "id": "ab93d403de5cffc6",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "センサーデータ",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "\"室温 \" & payload.te.val & \" 湿度 \" & payload.hu.val & (payload.mo.created_at ? \" 人感 \" & (($millis() - $toMillis(payload.mo.created_at))/1000) & \"秒前\" : \"\")",
+        "targetType": "jsonata",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 780,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "d38ce0e11aa89842",
+        "type": "switch",
+        "z": "6ff513f55be3777a",
+        "name": "最終人感秒数",
+        "property": "payload.mo.created_at ? (($millis() - $toMillis(payload.mo.created_at))/1000) : null",
+        "propertyType": "jsonata",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "gt",
+                "v": "120",
+                "vt": "num"
+            },
+            {
+                "t": "lte",
+                "v": "120",
+                "vt": "num"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "x": 780,
+        "y": 540,
+        "wires": [
+            [],
+            [
+                "124dce2de5fad46b"
+            ],
+            [
+                "79305411c1652a29"
+            ]
+        ]
+    },
+    {
+        "id": "124dce2de5fad46b",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "照明OFF",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"button\": \"off\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 520,
+        "wires": [
+            [
+                "1cfce99198f38630"
+            ]
+        ]
+    },
+    {
+        "id": "79305411c1652a29",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "照明ON",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"button\": \"on\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 560,
+        "wires": [
+            [
+                "1cfce99198f38630"
+            ]
+        ]
+    },
+    {
+        "id": "1cfce99198f38630",
+        "type": "link out",
+        "z": "6ff513f55be3777a",
+        "name": "link out 1",
+        "mode": "link",
+        "links": [
+            "6bb582e80a0bf110"
+        ],
+        "x": 1085,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "6bb582e80a0bf110",
+        "type": "link in",
+        "z": "6ff513f55be3777a",
+        "name": "link in 1",
+        "links": [
+            "1cfce99198f38630"
+        ],
+        "x": 135,
+        "y": 400,
+        "wires": [
+            [
+                "c9e3c875c463168f"
+            ]
+        ]
+    },
+    {
+        "id": "e402a76e8bafc06a",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン家電ID抽出",
+        "rules": [
+            {
+                "t": "set",
+                "p": "acApplianceId",
+                "pt": "flow",
+                "to": "payload[\t    nickname=\"自宅エアコン\" \t].id",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1220,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "46254481f040d7c9",
+        "type": "subflow:1004aad07d3f3d66",
+        "z": "6ff513f55be3777a",
+        "name": "",
+        "x": 750,
+        "y": 840,
+        "wires": [
+            [
+                "11071bd28af5049a",
+                "a4478b6552c28721"
+            ]
+        ]
+    },
+    {
+        "id": "11071bd28af5049a",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン操作結果",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.updated_at",
+        "statusType": "jsonata",
+        "x": 970,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "df4e1357d5b81de2",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン冷房強 (風量4, 26℃)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"air_volume\":\"4\",\"operation_mode\":\"cool\",\"temperature\":\"26\",\"temperature_unit\":\"c\"}",
+        "payloadType": "json",
+        "x": 1200,
+        "y": 760,
+        "wires": [
+            [
+                "fed37e1f9d679e43"
+            ]
+        ]
+    },
+    {
+        "id": "3328c20c569f38bb",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "エアコンURL構築",
+        "rules": [
+            {
+                "t": "set",
+                "p": "url",
+                "pt": "msg",
+                "to": "\"https://api.nature.global/1/appliances/\" & $flowContext(\"acApplianceId\") & \"/aircon_settings\"",
+                "tot": "jsonata"
+            },
+            {
+                "t": "set",
+                "p": "method",
+                "pt": "msg",
+                "to": "POST",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 550,
+        "y": 840,
+        "wires": [
+            [
+                "46254481f040d7c9"
+            ]
+        ]
+    },
+    {
+        "id": "601ea239a9fb9215",
+        "type": "inject",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン冷房中 (風量2, 27℃)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"air_volume\":\"2\",\"operation_mode\":\"cool\",\"temperature\":\"27\",\"temperature_unit\":\"c\"}",
+        "payloadType": "json",
+        "x": 1200,
+        "y": 800,
+        "wires": [
+            [
+                "fed37e1f9d679e43"
+            ]
+        ]
+    },
+    {
+        "id": "72762da1404ce252",
+        "type": "switch",
+        "z": "6ff513f55be3777a",
+        "name": "室温",
+        "property": "payload.te.val",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "null"
+            },
+            {
+                "t": "gte",
+                "v": "27.5",
+                "vt": "num"
+            },
+            {
+                "t": "lte",
+                "v": "26",
+                "vt": "num"
+            },
+            {
+                "t": "lte",
+                "v": "27",
+                "vt": "num"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 4,
+        "x": 750,
+        "y": 680,
+        "wires": [
+            [],
+            [
+                "f527b881a9418c19"
+            ],
+            [
+                "8a876ecac8806211"
+            ],
+            [
+                "541ff18a874b2289"
+            ]
+        ]
+    },
+    {
+        "id": "f527b881a9418c19",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン冷房強 (風量4, 26℃)",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"air_volume\":\"4\",\"operation_mode\":\"cool\",\"temperature\":\"26\",\"temperature_unit\":\"c\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1190,
+        "y": 640,
+        "wires": [
+            [
+                "fed37e1f9d679e43"
+            ]
+        ]
+    },
+    {
+        "id": "541ff18a874b2289",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン冷房中 (風量2, 27℃)",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"air_volume\":\"2\",\"operation_mode\":\"cool\",\"temperature\":\"27\",\"temperature_unit\":\"c\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1190,
+        "y": 720,
+        "wires": [
+            [
+                "fed37e1f9d679e43"
+            ]
+        ]
+    },
+    {
+        "id": "8a876ecac8806211",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン冷房弱 (風量1, 27℃)",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"air_volume\":\"1\",\"operation_mode\":\"cool\",\"temperature\":\"27\",\"temperature_unit\":\"c\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1190,
+        "y": 680,
+        "wires": [
+            [
+                "fed37e1f9d679e43"
+            ]
+        ]
+    },
+    {
+        "id": "fed37e1f9d679e43",
+        "type": "link out",
+        "z": "6ff513f55be3777a",
+        "name": "link out 2",
+        "mode": "link",
+        "links": [
+            "39c4e9ec0ab1b5ea"
+        ],
+        "x": 1385,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "39c4e9ec0ab1b5ea",
+        "type": "link in",
+        "z": "6ff513f55be3777a",
+        "name": "link in 2",
+        "links": [
+            "fed37e1f9d679e43"
+        ],
+        "x": 35,
+        "y": 840,
+        "wires": [
+            [
+                "7ee49e70afbe86f9",
+                "f12f06ce7ae25686"
+            ]
+        ]
+    },
+    {
         "id": "6e53ef31091cb8dd",
         "type": "switch",
         "z": "6ff513f55be3777a",
@@ -27,5 +1090,137 @@
                 "70d43f9a103bb508"
             ]
         ]
+    },
+    {
+        "id": "70d43f9a103bb508",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "エアコン更新スキップ",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 570,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "a4478b6552c28721",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "最終エアコン設定保存",
+        "rules": [
+            {
+                "t": "set",
+                "p": "lastAcSettings",
+                "pt": "flow",
+                "to": "$exists(payload.temp) ? payload : undefined",
+                "tot": "jsonata",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 840,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7ee49e70afbe86f9",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "要操作条件",
+        "rules": [
+            {
+                "t": "set",
+                "p": "needAcUpdate",
+                "pt": "msg",
+                "to": "(\t$lastAcSettings := $flowContext(\"lastAcSettings\");\t$not($exists($lastAcSettings))\tor\t($millis() - $toMillis($lastAcSettings.updated_at)) > (60*60*1000)\tor\t$lastAcSettings.temp != payload.temperature\tor\t$lastAcSettings.mode != payload.operation_mode\tor\t$lastAcSettings.vol != payload.air_volume\t)",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 170,
+        "y": 840,
+        "wires": [
+            [
+                "6e53ef31091cb8dd",
+                "f25f7dc6dc99ee05"
+            ]
+        ]
+    },
+    {
+        "id": "f25f7dc6dc99ee05",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "要更新",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "needAcUpdate",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 330,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "f12f06ce7ae25686",
+        "type": "change",
+        "z": "6ff513f55be3777a",
+        "name": "最終エアコン設定確認",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "lastAcSettings",
+                "tot": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 200,
+        "y": 940,
+        "wires": [
+            [
+                "31dbcd0c59a7b961"
+            ]
+        ]
+    },
+    {
+        "id": "31dbcd0c59a7b961",
+        "type": "debug",
+        "z": "6ff513f55be3777a",
+        "name": "最終エアコン設定",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload.updated_at",
+        "statusType": "jsonata",
+        "x": 430,
+        "y": 940,
+        "wires": []
     }
 ]
